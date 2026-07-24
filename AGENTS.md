@@ -18,8 +18,9 @@ cd frontend && npm run dev                  # start Vite dev server
 | `npm run dev` — Vite HMR :3000 | `go run ./cmd/server` — Gin :8080 |
 | `npm run build` — `tsc -b && vite build` | `go build ./...` |
 | `npm run lint` — `eslint .` (flat config) | `go vet ./...` |
+| | `go test ./... -v` — run Go unit tests |
 
-No test runner configured in either package.
+Frontend: no test runner configured.
 
 ## Server layout
 ```
@@ -32,6 +33,10 @@ server/
 │   ├── handlers/notes.go         # CRUD handlers (List, Get, Create, Update, Delete)
 │   └── router/router.go          # Gin engine setup, CORS (allow :3000), routes
 └── migrations/001_create_notes.sql  # schema reference
+
+Test files:
+├── internal/handlers/health_test.go  # test /api/health response
+└── internal/handlers/handlers_test.go  # test CreateNote validation
 ```
 
 ## API
@@ -48,6 +53,18 @@ server/
 - `notes` table: id (UUID PK), title, content, tags (TEXT[]), created_at, updated_at
 - Migration runs automatically on server start (embedded SQL in `database.RunMigrations`)
 - Connection via `DATABASE_URL` env var; defaults to `postgres://notes:notespass@localhost:5432/notesdb?sslmode=disable`
+
+## CI/CD (GitHub Actions)
+- Workflow: `.github/workflows/ci-cd.yml`
+- **CI** runs on every push/PR to main: `go test` → `go build` → `npm run build`
+- **CD** runs on push to main only: builds artifacts → SCP to VPS → restart systemd → health check
+- All secrets (SSH host/port/user/password) stored in GitHub Secrets, never in code
+- Health check fail → pipeline red, website keeps old version
+
+## Server quirks
+- CORS is manual middleware in `router.go:13-22` (no `gin-contrib/cors` dependency)
+- `updated_at` is set in Go `UpdateNote` query (`updated_at = NOW()`), not a DB trigger
+- Server reads `PORT` env var (default `8080`) in addition to `DATABASE_URL`
 
 ## Frontend quirks
 - `typescript-eslint` **without** type-aware rules (no `project` in parserOptions)
