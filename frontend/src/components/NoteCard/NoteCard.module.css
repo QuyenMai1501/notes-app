@@ -1,0 +1,92 @@
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fff;
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  word-break: break-word;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.editBtn,
+.deleteBtn {
+  padding: 4px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  background: #fff;
+}
+
+.editBtn {
+  color: #646cff;
+  border-color: #646cff;
+}
+
+.editBtn:hover {
+  background: #646cff;
+  color: #fff;
+}
+
+.deleteBtn {
+  color: #e53935;
+  border-color: #e53935;
+}
+
+.deleteBtn:hover {
+  background: #e53935;
+  color: #fff;
+}
+
+.content {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 12px 0;
+  word-break: break-word;
+}
+
+.tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  background: #f0f0ff;
+  color: #646cff;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.date {
+  font-size: 12px;
+  color: #999;
+}
