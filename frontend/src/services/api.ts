@@ -1,6 +1,6 @@
 import type { Note, CreateNoteData, UpdateNoteData } from '../types/note'
 
-const BASE_URL = ''
+const BASE_URL = '/api'
 
 class ApiError extends Error {
   status: number
