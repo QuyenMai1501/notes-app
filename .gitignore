@@ -1,0 +1,48 @@
+    # Go
+server/server
+server/tmp/
+*.exe
+*.test
+*.out
+
+# Node
+node_modules/
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Docker
+pgdata/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.vs/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor temp files
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
