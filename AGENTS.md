@@ -55,11 +55,21 @@ Test files:
 - Connection via `DATABASE_URL` env var; defaults to `postgres://notes:notespass@localhost:5432/notesdb?sslmode=disable`
 
 ## CI/CD (GitHub Actions)
-- Workflow: `.github/workflows/ci-cd.yml`
+- Workflows: `.github/workflows/ci.yml` + `.github/workflows/cd.yml`
 - **CI** runs on every push/PR to main: `go test` → `go build` → `npm run build`
-- **CD** runs on push to main only: builds artifacts → SCP to VPS → restart systemd → health check
-- All secrets (SSH host/port/user/password) stored in GitHub Secrets, never in code
-- Health check fail → pipeline red, website keeps old version
+- **CD** runs on push to main only: test → build → SCP to VPS → restart systemd → health check → Telegram notify
+- CD sends ✅ on success (with pusher name + commit message), ❌ on failure (with link to run log)
+- All secrets stored in GitHub Secrets, never in code
+
+## Required GitHub Secrets
+| Secret | Description |
+|---|---|
+| `SSH_HOST` | VPS IP address |
+| `SSH_PORT` | SSH port (24700) |
+| `SSH_USER` | SSH username (root) |
+| `SSH_PASSWORD` | SSH password |
+| `TELEGRAM_BOT_TOKEN` | Telegram bot token for CD notifications |
+| `TELEGRAM_CHAT_ID` | Telegram chat/group ID to receive notifications |
 
 ## Server quirks
 - CORS is manual middleware in `router.go:13-22` (no `gin-contrib/cors` dependency)

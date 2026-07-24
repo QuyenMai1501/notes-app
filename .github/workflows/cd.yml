@@ -79,3 +79,35 @@ jobs:
             exit 1
           fi
           echo "Health check PASSED (HTTP $HTTP_CODE)"
+
+      - name: Notify success via Telegram
+        if: success()
+        shell: bash
+        env:
+          TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          MSG="✅ <b>Deploy thành công</b>
+          <b>Người push:</b> ${{ github.actor }}
+          <b>Commit:</b> ${{ github.event.head_commit.message }}
+          <b>Workflow:</b> ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
+            -d "chat_id=${CHAT_ID}" \
+            -d "text=${MSG}" \
+            -d "parse_mode=HTML"
+
+      - name: Notify failure via Telegram
+        if: failure()
+        shell: bash
+        env:
+          TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          MSG="❌ <b>Deploy thất bại</b>
+          <b>Người push:</b> ${{ github.actor }}
+          <b>Commit:</b> ${{ github.event.head_commit.message }}
+          <b>Log:</b> ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
+            -d "chat_id=${CHAT_ID}" \
+            -d "text=${MSG}" \
+            -d "parse_mode=HTML"
