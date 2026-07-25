@@ -1,0 +1,32 @@
+groups:
+  - name: notes-app
+    rules:
+      - alert: APIDown
+        expr: up{job="notes-api"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "❌ API server DOWN"
+          description: |
+            Go API server không phản hồi quá 30 giây.
+
+      - alert: HighCPU
+        expr: 100 - avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100 > 20
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "⚠️ CPU > 20% trong 2 phút"
+          description: |
+            CPU VPS đang cao.
+
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes{mountpoint="/",fstype!="tmpfs"} / node_filesystem_size_bytes{mountpoint="/",fstype!="tmpfs"}) * 100 < 20
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "⚠️ Disk còn < 20%"
+          description: |
+            Ổ đĩa sắp đầy.
